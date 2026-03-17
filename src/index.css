@@ -1,0 +1,175 @@
+/*
+Design north-star (Lumio-inspired, not copied):
+- Dark studio background, acid-lime accents, crisp panels.
+- Clear type hierarchy: display serif for “thesis”, SC sans for body, mono for labels.
+- Interactions: glow-on-focus, subtle lift on hover, sticky nav with glass.
+*/
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --radius: 0.85rem;
+
+  /* Dark studio */
+  --background: oklch(0.145 0.015 255);
+  --foreground: oklch(0.965 0.01 95);
+
+  /* Panels */
+  --card: oklch(0.185 0.016 255);
+  --card-foreground: var(--foreground);
+  --popover: oklch(0.185 0.016 255);
+  --popover-foreground: var(--foreground);
+
+  /* Acid-lime primary (Lumio vibe) */
+  --primary: oklch(0.92 0.18 109);
+  --primary-foreground: oklch(0.14 0.015 255);
+
+  --secondary: oklch(0.205 0.015 255);
+  --secondary-foreground: var(--foreground);
+
+  --muted: oklch(0.205 0.015 255);
+  --muted-foreground: oklch(0.73 0.015 95);
+
+  --accent: oklch(0.205 0.015 255);
+  --accent-foreground: var(--foreground);
+
+  --destructive: oklch(0.67 0.22 25);
+
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.92 0.18 109);
+
+  --font-body: "Noto Sans SC", ui-sans-serif, system-ui;
+  --font-display: "Fraunces", ui-serif, Georgia;
+  --font-mono: "Space Mono", ui-monospace, SFMono-Regular;
+}
+
+.dark {
+  /* keep variables on :root; ThemeContext toggles .dark class */
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+    text-rendering: geometricPrecision;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--primary) 28%, transparent);
+    color: color-mix(in oklab, var(--foreground) 92%, black);
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+
+  .grain {
+    position: relative;
+  }
+  .grain:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.09;
+    mix-blend-mode: soft-light;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+  }
+
+  .hairline {
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--border) 95%, transparent);
+  }
+
+  .panel {
+    background:
+      radial-gradient(1200px 420px at 18% -10%, color-mix(in oklab, var(--primary) 18%, transparent), transparent 60%),
+      radial-gradient(900px 380px at 95% 10%, color-mix(in oklab, white 10%, transparent), transparent 65%),
+      color-mix(in oklab, var(--card) 86%, transparent);
+  }
+
+  .glow {
+    box-shadow:
+      0 0 0 1px color-mix(in oklab, var(--border) 92%, transparent),
+      0 0 0 0px color-mix(in oklab, var(--primary) 0%, transparent),
+      0 14px 40px -18px color-mix(in oklab, black 65%, transparent);
+  }
+
+  .glow:focus-within {
+    box-shadow:
+      0 0 0 1px color-mix(in oklab, var(--primary) 40%, transparent),
+      0 0 0 6px color-mix(in oklab, var(--primary) 12%, transparent),
+      0 18px 60px -20px color-mix(in oklab, black 70%, transparent);
+  }
+
+  .lift {
+    transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      background-color 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .lift:hover {
+    transform: translateY(-3px);
+  }
+
+  .text-kicker {
+    @apply text-[11px] tracking-[0.26em] uppercase;
+    font-family: var(--font-mono);
+  }
+
+  .divider-dashed {
+    background-image: repeating-linear-gradient(
+      to right,
+      color-mix(in oklab, var(--border) 65%, transparent) 0,
+      color-mix(in oklab, var(--border) 65%, transparent) 6px,
+      transparent 6px,
+      transparent 12px
+    );
+    height: 1px;
+  }
+}
